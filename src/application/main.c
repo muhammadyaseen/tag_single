@@ -15,16 +15,6 @@
 
 #include "deca_spi.h"
 
-/*
-#ifdef USB_SUPPORT
-	extern void usb_run(void);
-	extern int usb_init(void);
-	extern void usb_printconfig(void);
-	extern void send_usbmessage(uint8*, int);
-#endif
-*/
-//rangeStart = 0;
-
 int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
 //NOTE: switches TA_SW1_7 and TA_SW1_8 are used to set tag/anchor address
 //if instance_mode = TAG_TDOA then the device cannot be selected as anchor
@@ -105,27 +95,27 @@ uint32 inittestapplication(void)
 
     if (0 > result) {
     	i=15;
-    	        	while(i--)
-    	        	{
-    	        		if (i & 1) {
-    	        			//led_off(LED_PC6);
-    	        			led_on(LED_PC6);
-    	        			led_off(LED_PC7);
-    	        		}
-    	        		else{
-    	        			//led_on(LED_PC6);
-    	        			led_off(LED_PC6);
-    	        			led_on(LED_PC7);
-    	        		}
+		while(i--)
+		{
+			if (i & 1) {
+				//led_off(LED_PC6);
+				led_on(LED_PC6);
+				led_off(LED_PC7);
+			}
+			else{
+				//led_on(LED_PC6);
+				led_off(LED_PC6);
+				led_on(LED_PC7);
+			}
 
-    	        		Sleep(500);
-    	        	}
+			Sleep(500);
+		}
 
-    	        		i = 0;
+			i = 0;
 
-    	        		Sleep(500);
-    	        		led_on(LED_ALL);
-    	        		Sleep(1400);
+			Sleep(500);
+			led_on(LED_ALL);
+			Sleep(1400);
 
 
     	return (-1) ; // Some failure has occurred
@@ -358,7 +348,7 @@ int main(void)
     double avg_result = 0;
     uint8 dataseq1[40];
 
-    //led_off(LED_ALL); //turn off all the LEDs
+    led_off(LED_ALL); //turn off all the LEDs
 
     peripherals_init();
 
@@ -368,374 +358,137 @@ int main(void)
 
     //initLCD();
 
-    init_dw();
+    //init_dw();
 
     role_btn_set(DISABLE);//emergency button settings
 
 
-    //memset(dataseq, 40, 0);
-    //memcpy(dataseq, (const uint8 *) "      KFRL      ", 16);
-    ////writetoLCD( 40, 1, dataseq); //send some data
-    //memcpy(dataseq, (const uint8 *) "Worker's Device ", 16); // Also set at line #26 (Should make this from single value !!!)
-    //writetoLCD( 16, 1, dataseq); //send some data
-
-    //Sleep(1000);
-
-//    i=15;
-//                                    while(i--)
-//                                    {
-//                                        if (i & 1) {
-//                                        	led_off(LED_PC6);
-//                                        	led_on(LED_PC8);
-//                                        	led_off(LED_PC7);
-//                                        }
-//                                        else{
-//                                        	led_on(LED_PC6);
-//                                        	led_off(LED_PC8);
-//                                        	led_on(LED_PC7);
-//                                        }
-//                                        Sleep(400);
-//                                    }
-//
-//                                    i = 0;
-
-
-//#ifdef USB_SUPPORT
-//    // enable the USB functionality
-//    usb_init();
-//    Sleep(1000);
-//#endif
-
-    /*i=30;
-                        while(i--)
-                        {
-                            if (i & 1) led_off(LED_ALL);
-                            else    led_on(LED_ALL);
-                            Sleep(200);
-                        }
-
-                        i = 0;
-*/
     port_DisableEXT_IRQ(); //disable ScenSor IRQ until we configure the device
 
-    //test EVB1000 - used in EVK1000 production
-    //NOTE: when using non-Discovery mode switch 8 is part of address config/anchor poll mask config
-/*#if (DR_DISCOVERY == 1)
-    if((is_button_low(0) == S1_SWITCH_ON) && (is_switch_on(TA_SW1_8) == S1_SWITCH_ON)) //using BOOT1 switch for test
-    {
-        test_application_run(); //does not return....
-    }
-    else
-#endif
-*/
+
     //this 'if' is for pc software, i am commenting this bcz we dont need to run deca ranging on PC
-    if(false/*is_switch_on(TA_SW1_3) == S1_SWITCH_OFF*/)
+    if(false)
     {
-    /*    int j = 1000000;
-        uint8 command;
 
-        memset(dataseq, 0, 40);
-
-        while(j--);
-        //command = 0x1 ;  //clear screen
-        //////writetoLCD( 1, 0,  &command);
-        command = 0x2 ;  //return cursor home
-        //writetoLCD( 1, 0,  &command);
-
-        memcpy(dataseq, (const uint8 *) "KFRL       ", 12);
-        writetoLCD( 40, 1, dataseq); //send some data
-#ifdef USB_SUPPORT //this is set in the port.h file
-        memcpy(dataseq, (const uint8 *) "USB to SPI ", 12);
-#else
-#endif
-        writetoLCD( 16, 1, dataseq); //send some data
-
-        j = 1000000;
-
-        while(j--);
-
-        command = 0x2 ;  //return cursor home
-        //writetoLCD( 1, 0,  &command);
-#ifdef USB_SUPPORT //this is set in the port.h file
-        // enable the USB functionality
-        //usb_init();
-
-        NVIC_DisableDECAIRQ();
-
-        // Do nothing in foreground -- allow USB application to run, I guess on the basis of USB interrupts?
-        while (1)       // loop forever
-        {
-            usb_run();
-        }
-#endif
-
-        return 1;*/
     }
     else //run DecaRanging application on ARM board
     {
-        uint8 dataseq[40];
-        uint8 command = 0x0;
-
-        command = 0x2 ;  //return cursor home
-        ////writetoLCD( 1, 0,  &command);
-        //memset(dataseq, ' ', 40);
-        //memcpy(dataseq, (const uint8 *) "      Yaseen   ", 15);
-        //writetoLCD( 15, 1, dataseq); //send some data
-
         led_off(LED_ALL);
-
-        Sleep(1000);
-
-        led_on(LED_ALL);
-
-        Sleep(1000);
-
-        led_off(LED_ALL);
-
-        /*i=30;
-                            while(i--)
-                            {
-                                if (i & 1) {
-                                	led_off(LED_PC6);
-                                	led_on(LED_PC8);
-                                	led_off(LED_PC7);
-                                }
-                                else{
-                                	led_on(LED_PC6);
-                                	led_off(LED_PC8);
-                                	led_on(LED_PC7);
-                                }
-                                Sleep(200);
-                            }
-
-                            i = 0;
-*/
-                         //   led_off(LED_ALL);
 
         if(inittestapplication() == (uint32)-1) //test SPI and dw1000 device is working or not
         {
-            led_off(LED_ALL); //to display error....
-
-            dataseq[0] = 0x2 ;  //return cursor home
-            //writetoLCD( 1, 0,  &dataseq[0]);
-            //memset(dataseq, ' ', 40);
-            //memcpy(dataseq, (const uint8 *) "ERROR   ", 12);
-            //writetoLCD( 40, 1, dataseq); //send some data
-            //memcpy(dataseq, (const uint8 *) "  INIT FAIL ", 12);
-            //writetoLCD( 40, 1, dataseq); //send some data
-
-//            i=30;
-//                    while(i--)
-//                    {
-//                        if (i & 1) led_off(LED_ALL);
-//                        else    led_on(LED_ALL);
-//                        Sleep(200);
-//                    }
-//
-//                    i = 0;
-
-//            i=15;
-//                                 while(i--)
-//                                 {
-//                                     if (i & 1) {
-//                                     	//led_off(LED_PC6);
-//                                     	led_on(LED_PC8);
-//                                     	//led_off(LED_PC7);
-//                                     }
-//                                     else{
-//                                     	//led_on(LED_PC6);
-//                                     	led_off(LED_PC8);
-//                                     	//led_on(LED_PC7);
-//                                     }
-//                                     Sleep(300);
-//                                 }
-//
-//                                 i = 0;
-
+            led_on(LED_ALL); //to display error....
             return 0; //error
         }
-        else
+        else	//init test was successfull.. Blink LEDs to indicate
         {
         	 i=20;
-        	                                         while(i--)
-        	                                         {
-        	                                             if (i & 1) {
-        	                                             	led_off(LED_PC6);
-        	                                             	led_on(LED_PC7);
-        	                                             	//led_off(LED_PC7);
-        	                                             }
-        	                                             else{
-        	                                             	led_on(LED_PC6);
-        	                                             	led_off(LED_PC7);
-        	                                             	//led_on(LED_PC7);
-        	                                             }
-        	                                             Sleep(100);
-        	                                         }
+			 while(i--)
+			 {
+				 if (i & 1) {
+					led_off(LED_PC6);
+					led_on(LED_PC7);
+					//led_off(LED_PC7);
+				 }
+				 else{
+					led_on(LED_PC6);
+					led_off(LED_PC7);
+					//led_on(LED_PC7);
+				 }
+				 Sleep(100);
+			 }
 
-        	                                         i = 0;
-        	                                 led_off(LED_ALL);
+			 i = 0;
+        	 led_off(LED_ALL);
         }
-//        i=15;
-//                                         while(i--)
-//                                         {
-//                                             if (i & 1) {
-//                                             	//led_off(LED_PC6);
-//                                             	led_on(LED_PC6);
-//                                             	//led_off(LED_PC7);
-//                                             }
-//                                             else{
-//                                             	//led_on(LED_PC6);
-//                                             	led_off(LED_PC6);
-//                                             	//led_on(LED_PC7);
-//                                             }
-//                                             Sleep(300);
-//                                         }
-//
-//                                         i = 0;
-
-        //sleep for 5 seconds displaying "Decawave"
-        /*i=30;
-        while(i--)
-        {
-            if (i & 1) led_off(LED_ALL);
-            else    led_on(LED_ALL);
-            Sleep(200);
-        }
-
-        i = 0;
-*/
-  //      led_off(LED_ALL);
-        //command = 0x2 ;  //return cursor home
-        ////writetoLCD( 1, 0,  &command);
-
-        //memset(dataseq, ' ', 40);
-
-		//led_on(LED_PC7);
-
-		//if TA_SW1_2 is ON use fast ranging (fast 2wr)
-		//EVK1000 User manual pg 22
-		if(is_button_low(0) == S1_SWITCH_ON)
-		{
-			//memcpy(&dataseq[2], (const uint8 *) " Fast Tag   ", 12);
-			//writetoLCD( 40, 1, dataseq); //send some data
-			//memcpy(&dataseq[2], (const uint8 *) "   Ranging  ", 12);
-			//writetoLCD( 16, 1, dataseq); //send some data
-			//Sleep(1000);
-		}
-		else
-		{   //as of 26/08/15 I am seeing this when I execute code, means Fast ranging is disabled
-			//memcpy(&dataseq[2], (const uint8 *) " TAG BLINK  ", 12);
-			////writetoLCD( 40, 1, dataseq); //send some data
-			//sprintf((char*)&dataseq[0], "%llX", instance_get_addr());
-			////writetoLCD( 16, 1, dataseq); //send some data
-			//Sleep(1000);
-		}
-
-        //command = 0x2 ;  //return cursor home
-        //writetoLCD( 1, 0,  &command);
     }
 
-    port_EnableEXT_IRQ(); //enable ScenSor IRQ before starting
-
-    //memset(dataseq, ' ', 40);
-    //memset(dataseq1, ' ', 40);
+    led_off(LED_ALL);
 
     // main loop
-
+    port_EnableEXT_IRQ(); //enable ScenSor IRQ before starting
 	role_btn_set(ENABLE); //configures interrupt
 
-	bool dorange = true;
+	//bool dorange = true;
 	//bool test = true;
 
     while(1)
     {
+		role_btn_set(DISABLE);
 
-    	if(( /*roleBtnOn() == */ true))
-    	{
-    		//dorange = false;
+		instance_run();							//ranging routine
 
-    		/*if(dorange)
-    		{
-    			dataseq[0] = 0x2 ;  //return cursor home
-    			////writetoLCD( 1, 0,  dataseq);
-    			memcpy(dataseq, (const uint8 *) "   inside  if   ", 16);
-    			//writetoLCD( 40, 1, dataseq); //send some data
-    			dorange = false;
-    		}*/
-
-			role_btn_set(DISABLE);
-
-			instance_run();							//ranging routine
-
-			//Sleep(500);
+		//Sleep(500);
 
 #ifdef SAFETY_VEST
 			//si_sendAlertMSG();
 #endif
-			role_btn_set(ENABLE);
 
-			if(instancenewrange())
+		role_btn_set(ENABLE);
+
+		if(instancenewrange())
+		{
+			int l = 0, txl = 0, rxl = 0, aaddr, taddr;
+			ranging = 1;
+			//send the new range information to LCD and/or USB
+			range_result = instance_get_idist();
+			avg_result = instance_get_adist();
+			//set_rangeresult(range_result);
+			dataseq[0] = 0x2 ;  //return cursor home
+			//writetoLCD( 1, 0,  dataseq);
+
+			//memset(dataseq, ' ', 40);
+			//memset(dataseq1, ' ', 40);
+			//sprintf((char*)&dataseq[1], "LAST: %4.2f m", range_result);
+			//writetoLCD( 40, 1, dataseq); //send some data
+
+			//sprintf((char*)&dataseq1[1], "AVG8: %4.2f m", avg_result);
+			//writetoLCD( 16, 1, dataseq1); //send some data
+
+		}
+
+		if(ranging == 0)
+		{
+			if(instancesleeping())
 			{
-				int l = 0, txl = 0, rxl = 0, aaddr, taddr;
-				ranging = 1;
-				//send the new range information to LCD and/or USB
-				range_result = instance_get_idist();
-				avg_result = instance_get_adist();
-				//set_rangeresult(range_result);
 				dataseq[0] = 0x2 ;  //return cursor home
 				//writetoLCD( 1, 0,  dataseq);
+				if(toggle)
+				{
+					toggle = 0;
+					//memcpy(&dataseq[0], (const uint8 *) "    AWAITING    ", 16);
+					//writetoLCD( 40, 1, dataseq); //send some data
+					//memcpy(&dataseq[0], (const uint8 *) "    RESPONSE    ", 16);
+					//writetoLCD( 16, 1, dataseq); //send some data
+				}
+				else
+				{
+					toggle = 1;
+					//memcpy(&dataseq[2], (const uint8 *) "   TAG BLINK    ", 16);
+					//writetoLCD( 40, 1, dataseq); //send some data
+					//sprintf((char*)&dataseq[0], "%llX", instance_get_addr());
+					//writetoLCD( 16, 1, dataseq); //send some data
+				}
 
-				memset(dataseq, ' ', 40);
-				memset(dataseq1, ' ', 40);
-				sprintf((char*)&dataseq[1], "LAST: %4.2f m", range_result);
-				//writetoLCD( 40, 1, dataseq); //send some data
-
-				sprintf((char*)&dataseq1[1], "AVG8: %4.2f m", avg_result);
-				//writetoLCD( 16, 1, dataseq1); //send some data
+				//#ifdef USB_SUPPORT //this is set in the port.h file
+				//send_usbmessage(&dataseq[0], 35);
+				//#endif
 
 			}
-
-			if(ranging == 0)
-			{
-				if(instancesleeping())
-				{
-					dataseq[0] = 0x2 ;  //return cursor home
-					//writetoLCD( 1, 0,  dataseq);
-					if(toggle)
-					{
-						toggle = 0;
-						memcpy(&dataseq[0], (const uint8 *) "    AWAITING    ", 16);
-						//writetoLCD( 40, 1, dataseq); //send some data
-						memcpy(&dataseq[0], (const uint8 *) "    RESPONSE    ", 16);
-						//writetoLCD( 16, 1, dataseq); //send some data
-					}
-					else
-					{
-						toggle = 1;
-						memcpy(&dataseq[2], (const uint8 *) "   TAG BLINK    ", 16);
-						//writetoLCD( 40, 1, dataseq); //send some data
-						sprintf((char*)&dataseq[0], "%llX", instance_get_addr());
-						//writetoLCD( 16, 1, dataseq); //send some data
-					}
-	//#ifdef USB_SUPPORT //this is set in the port.h file
-					//send_usbmessage(&dataseq[0], 35);
-	//#endif
-				}
 
 				if(instanceanchorwaiting() == 2)
 				{
 					ranging = 1;
-					dataseq[0] = 0x2 ;  //return cursor home
+					//dataseq[0] = 0x2 ;  //return cursor home
 					//writetoLCD( 1, 0,  dataseq);
-					memcpy(&dataseq[0], (const uint8 *) "    RANGING WITH", 16);
+					//memcpy(&dataseq[0], (const uint8 *) "    RANGING WITH", 16);
 					//writetoLCD( 40, 1, dataseq); //send some data
-					sprintf((char*)&dataseq[0], "%016llX", instance_get_anchaddr());
+					//sprintf((char*)&dataseq[0], "%016llX", instance_get_anchaddr());
 					//writetoLCD( 16, 1, dataseq); //send some data
 				}
 			}
 
-    	}
-    	else
+    	/*else
     	{
     		//Sleep(1000);
 			dataseq[0] = 0x2 ;  //return cursor home
@@ -754,13 +507,13 @@ int main(void)
 
 			//dorange = roleBtnOn();
 
-			/*dataseq[0] = 0x2 ;  //return cursor home
+			dataseq[0] = 0x2 ;  //return cursor home
 			//writetoLCD( 1, 0,  dataseq);
 			memcpy(dataseq, (const uint8 *) "   WaitingOver  ", 16);
 			//writetoLCD( 40, 1, dataseq); //send some data
-			*/
+
 			//Sleep(500);
-		}
+		}*/
     }
 
     return 0;

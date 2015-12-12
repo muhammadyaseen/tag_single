@@ -635,7 +635,7 @@ void inst_processrxtimeout(instance_data_t *inst)
 {
 
 	//inst->responseTimeouts ++ ;
-    inst->rxTimeouts ++ ;
+    inst->rxTimeouts++ ;
     inst->done = INST_NOT_DONE_YET;
     {
 		// initiate the re-transmission of the poll that was not responded to
