@@ -407,7 +407,7 @@ int SPI_Configuration(void)
 	//SPI_InitStructure.SPI_NSS = SPI_NSS_Hard;
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
 	//SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4; //sets BR[2:0] bits - baudrate in SPI_CR1 reg bits 4-6
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPIx_PRESCALER + 2;
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPIx_PRESCALER;
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
 
@@ -638,7 +638,7 @@ void reset_DW1000(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(DW1000_RSTn_GPIO, &GPIO_InitStructure);
 
-	Sleep(10);
+	Sleep(1);
 }
 void setup_DW1000RSTnIRQ(int enable)
 {

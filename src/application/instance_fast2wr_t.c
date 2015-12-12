@@ -113,8 +113,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
                 setup_DW1000RSTnIRQ(1); //enable RSTn IRQ
 
-                Sleep(10);   //200 us to wake up then waits 5ms for DW1000 XTAL to stabilise
-
+                Sleep(1);   //200 us to wake up then waits 5ms for DW1000 XTAL to stabilise
                 port_SPIx_set_chip_select();  //CS high
 #if (DW_IDLE_CHK==1) //Wait (sleep) to give DW1000 time to get to IDLE state
 
@@ -137,12 +136,10 @@ int testapprun_tf(instance_data_t *inst, int message)
                 //need to poll to check when the DW1000 is in IDLE, the CPLL interrupt is not reliable
                 while(instance_data[0].dwIDLE == 0); //wait for DW1000 to go to IDLE state RSTn pin to go high
 
-                if((dwt_read32bitreg(0x0)&(0xFFFF0000)) != (0xDECA0130&0xFFFF0000))
+                if(dwt_read32bitreg(0x0) != 0xDECA0130)
                 {
                 	//error?
                 	int x = 0;
-                	led_on(LED_ALL);
-                	while(1);
                 }
 
                 setup_DW1000RSTnIRQ(0); //disable RSTn IRQ
@@ -198,25 +195,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
         case TA_TXBLINK_WAIT_SEND :
             {
-            	/*int i=10;
-            	        	                                         while(i--)
-            	        	                                         {
-            	        	                                             if (i & 1) {
-            	        	                                             	led_off(LED_PC6);
-            	        	                                             	led_on(LED_PC7);
-            	        	                                             	//led_off(LED_PC7);
-            	        	                                             }
-            	        	                                             else{
-            	        	                                             	led_on(LED_PC6);
-            	        	                                             	led_off(LED_PC7);
-            	        	                                             	//led_on(LED_PC7);
-            	        	                                             }
-            	        	                                             Sleep(50);
-            	        	                                         }
-
-            	        	                                         i = 0;
-            	        	                                 led_off(LED_ALL);*/
-
+            	led_off(LED_ALL);
                 //blink frames with IEEE EUI-64 tag ID
                 inst->blinkmsg.frameCtrl = 0xC5 ;
                 inst->blinkmsg.seqNum = inst->frame_sn++;
@@ -250,7 +229,7 @@ int testapprun_tf(instance_data_t *inst, int message)
                 inst->done = INST_DONE_WAIT_FOR_NEXT_EVENT; //will use RX FWTO to time out (set below)
 
 
-                //led_on(LED_ALL);
+                led_on(LED_ALL);
 
 
             }
@@ -362,7 +341,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
                 }
                 //Sleep(500);
-                //led_on(LED_ALL);
+                led_off(LED_ALL);
 
                 inst->done = INST_NOT_DONE_YET;
 

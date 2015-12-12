@@ -635,20 +635,20 @@ void inst_processrxtimeout(instance_data_t *inst)
 {
 
 	//inst->responseTimeouts ++ ;
-    inst->rxTimeouts++ ;
+    inst->rxTimeouts ++ ;
     inst->done = INST_NOT_DONE_YET;
     {
 		// initiate the re-transmission of the poll that was not responded to
 		inst->testAppState = TA_TXE_WAIT ;
 //NOTE: Do not go back to "discovery" mode -  needs a boards reset to go back to "discovery" mode once is starts ranging
-//#if 0
+#if 0
 #if (DR_DISCOVERY == 1)
-		if((inst->mode == TAG) && (inst->rxTimeouts > 5)) //if no response after sending 20 Polls - go back to blink mode
+		if((inst->mode == TAG) && (inst->responseTimeouts >= MAX_NUMBER_OF_POLL_RETRYS)) //if no response after sending 20 Polls - go back to blink mode
 		{
 			inst->mode = TAG_TDOA ;
 		}
 #endif
-//#endif
+#endif
 		if(inst->mode == TAG)
 		{
 			inst->nextState = TA_TXPOLL_WAIT_SEND ;
@@ -1144,6 +1144,24 @@ void instance_setapprun(int (*apprun_fn)(instance_data_t *inst, int message))
 int instance_run(void)
 {
 
+	/*uint8 i=25;
+	        	                                         while(i--)
+	        	                                         {
+	        	                                             if (i & 1) {
+	        	                                             	led_off(LED_PC6);
+	        	                                             	//led_on(LED_PC7);
+	        	                                             	//led_off(LED_PC7);
+	        	                                             }
+	        	                                             else{
+	        	                                             	led_on(LED_PC6);
+	        	                                             	//led_off(LED_PC7);
+	        	                                             	//led_on(LED_PC7);
+	        	                                             }
+	        	                                             Sleep(100);
+	        	                                         }
+
+	        	                                         i = 0;
+	        	                                 led_off(LED_ALL);*/
 
     int instance = 0 ;
     int done = INST_NOT_DONE_YET;

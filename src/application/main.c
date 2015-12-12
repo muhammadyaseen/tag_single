@@ -52,7 +52,6 @@ uint32 inittestapplication(void)
     uint32 devID ;
     int i , result;
     led_off(LED_ALL);
-
     SPI_ConfigFastRate(SPI_BaudRatePrescaler_32);  //max SPI before PLLs configured is ~4M
 
     //i = 10;
@@ -365,11 +364,11 @@ int main(void)
 
     spi_peripheral_init();
 
-    //Sleep(1000); //wait for LCD to power on
+    Sleep(1000); //wait for LCD to power on
 
     //initLCD();
 
-    //init_dw();
+    init_dw();
 
     role_btn_set(DISABLE);//emergency button settings
 
@@ -483,15 +482,15 @@ int main(void)
         //memcpy(dataseq, (const uint8 *) "      Yaseen   ", 15);
         //writetoLCD( 15, 1, dataseq); //send some data
 
-        //led_off(LED_ALL);
+        led_off(LED_ALL);
 
-        //Sleep(1000);
+        Sleep(1000);
 
-        //led_on(LED_ALL);
+        led_on(LED_ALL);
 
-        //Sleep(1000);
+        Sleep(1000);
 
-        //led_off(LED_ALL);
+        led_off(LED_ALL);
 
         /*i=30;
                             while(i--)
@@ -557,7 +556,7 @@ int main(void)
         }
         else
         {
-        	 i=10;
+        	 i=20;
         	                                         while(i--)
         	                                         {
         	                                             if (i & 1) {
@@ -570,7 +569,7 @@ int main(void)
         	                                             	led_off(LED_PC7);
         	                                             	//led_on(LED_PC7);
         	                                             }
-        	                                             Sleep(50);
+        	                                             Sleep(100);
         	                                         }
 
         	                                         i = 0;
@@ -648,19 +647,11 @@ int main(void)
 	bool dorange = true;
 	//bool test = true;
 
-	//TODO: Start Watchdog timer
-
-	    	//IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
-	    	//IWDG_SetPrescaler(8);
-	    	//IWDG_Enable();
-
-
     while(1)
     {
-    	//IWDG_ReloadCounter();
 
-    	//if( /*roleBtnOn() == */ true)
-    	//{
+    	if(( /*roleBtnOn() == */ true))
+    	{
     		//dorange = false;
 
     		/*if(dorange)
@@ -672,42 +663,18 @@ int main(void)
     			dorange = false;
     		}*/
 
-
 			role_btn_set(DISABLE);
 
 			instance_run();							//ranging routine
 
-
-			/*uint8 i=10;
-			    		        	                                         while(i--)
-			    		        	                                         {
-			    		        	                                             if (i & 1) {
-			    		        	                                             	led_off(LED_PC6);
-			    		        	                                             	//led_on(LED_PC7);
-			    		        	                                             	//led_off(LED_PC7);
-			    		        	                                             }
-			    		        	                                             else{
-			    		        	                                             	led_on(LED_PC6);
-			    		        	                                             	//led_off(LED_PC7);
-			    		        	                                             	//led_on(LED_PC7);
-			    		        	                                             }
-			    		        	                                             Sleep(70);
-			    		        	                                         }
-
-			    		        	                                         i = 0;
-			    		        	                                 led_off(LED_ALL);
-*/
-
-
-
 			//Sleep(500);
 
-//#ifdef SAFETY_VEST
+#ifdef SAFETY_VEST
 			//si_sendAlertMSG();
-//#endif
+#endif
 			role_btn_set(ENABLE);
 
-			/*if(instancenewrange())
+			if(instancenewrange())
 			{
 				int l = 0, txl = 0, rxl = 0, aaddr, taddr;
 				ranging = 1;
@@ -726,11 +693,9 @@ int main(void)
 				sprintf((char*)&dataseq1[1], "AVG8: %4.2f m", avg_result);
 				//writetoLCD( 16, 1, dataseq1); //send some data
 
-				//while(1);
+			}
 
-			}*/
-
-			/*if(ranging == 0)
+			if(ranging == 0)
 			{
 				if(instancesleeping())
 				{
@@ -767,10 +732,10 @@ int main(void)
 					sprintf((char*)&dataseq[0], "%016llX", instance_get_anchaddr());
 					//writetoLCD( 16, 1, dataseq); //send some data
 				}
-			}*/
+			}
 
-    	//}
-    	/*else
+    	}
+    	else
     	{
     		//Sleep(1000);
 			dataseq[0] = 0x2 ;  //return cursor home
@@ -789,13 +754,13 @@ int main(void)
 
 			//dorange = roleBtnOn();
 
-			dataseq[0] = 0x2 ;  //return cursor home
+			/*dataseq[0] = 0x2 ;  //return cursor home
 			//writetoLCD( 1, 0,  dataseq);
 			memcpy(dataseq, (const uint8 *) "   WaitingOver  ", 16);
 			//writetoLCD( 40, 1, dataseq); //send some data
-
+			*/
 			//Sleep(500);
-		}*/
+		}
     }
 
     return 0;
