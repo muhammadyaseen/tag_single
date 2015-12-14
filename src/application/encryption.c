@@ -5,7 +5,7 @@
  *      Author: KFRL/SM
  */
 
-#include "encryption.h"
+#include <encryption.h>
 
 void random_select(uint8* key, uint8* key_index)
 {

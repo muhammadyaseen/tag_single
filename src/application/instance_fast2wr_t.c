@@ -10,12 +10,13 @@
  *
  * @author DecaWave
  */
+//#include <encryption.h>
 #include "compiler.h"
 #include "port.h"
 #include "deca_device_api.h"
 #include "deca_spi.h"
-
 #include "instance.h"
+#include "encryption.h"
 
 // -------------------------------------------------------------------------------------------------------------------
 // set DW_IDLE_CHK to 1 to use Sleep in micro to wait for DW1000 to wakeup after DEEP_SLEEP
@@ -195,7 +196,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
         case TA_TXBLINK_WAIT_SEND :
             {
-            	led_off(LED_ALL);
+            	//led_off(LED_ALL);
                 //blink frames with IEEE EUI-64 tag ID
                 inst->blinkmsg.frameCtrl = 0xC5 ;
                 inst->blinkmsg.seqNum = inst->frame_sn++;
@@ -229,7 +230,7 @@ int testapprun_tf(instance_data_t *inst, int message)
                 inst->done = INST_DONE_WAIT_FOR_NEXT_EVENT; //will use RX FWTO to time out (set below)
 
 
-                led_on(LED_ALL);
+                //led_on(LED_ALL);
 
 
             }
@@ -255,7 +256,7 @@ int testapprun_tf(instance_data_t *inst, int message)
                 inst->msg_f.messageData[FCODE] = RTLS_DEMO_MSG_TAG_POLLF;
 
                 // generate encryption key
-                random_select(&(inst->encryption_data.key), &(inst->encryption_data.key_index));
+                random_select((inst->encryption_data.key), &(inst->encryption_data.key_index));
 
                 // insert password in the message
 //                memcpy(&(inst->encryption_data.key), "1234", POLL_KEY_LEN);
@@ -341,7 +342,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
                 }
                 //Sleep(500);
-                led_off(LED_ALL);
+                //led_off(LED_ALL);
 
                 inst->done = INST_NOT_DONE_YET;
 

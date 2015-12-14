@@ -268,18 +268,18 @@ void EXTI0_IRQHandler(void)
 void EXTI1_IRQHandler(void)
 {
 	//process interrupt here
-	for(uint16 k=0;k<1200;k++); // delay 120us
+	//for(uint16 k=0;k<1200;k++); // delay 120us
 
-	if(is_switch_on(ROLEBTN) == S1_SWITCH_ON)
-	{
+	//if(is_switch_on(ROLEBTN) == S1_SWITCH_ON)
+	//{
 		//emergency_flag = 1;
 		//rangeStart = 1;
-	}
-	else
-	{
+	//}
+	//else
+	//{
 		//emergency_flag = 0;
 		//rangeStart  = 0;
-	}
+	//}
 
 	/*uint8 dataseq[40];
 	dataseq[0] = 0x2 ;  //return cursor home
