@@ -598,6 +598,7 @@ typedef struct
 
 	encryption_data_t encryption_data;
 
+	int ranges;
 
 } instance_data_t ;
 

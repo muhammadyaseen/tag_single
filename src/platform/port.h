@@ -258,6 +258,8 @@ int is_button_low(uint16_t GPIOpin);
 #define is_button_high(x)			0
 void led_on(led_t led);
 void led_off(led_t led);
+void led_blink(led_t led, uint8 times, uint16 delay);
+
 #define gpio_set(x)				0
 #define gpio_reset(x)				0
 #define is_gpio_out_low(x)			0

@@ -183,6 +183,8 @@ int testapprun_tf(instance_data_t *inst, int message)
                 inst->canprintinfo = 1;
 
                 //put device into low power mode
+                //led_blink(LED_PC6, 5, 200);
+
                 dwt_entersleep(); //go to sleep
 
             }
@@ -238,6 +240,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 
         case TA_TXPOLL_WAIT_SEND :
             {
+            	led_blink(LED_PC7,5, 200);
 
 #if (DR_DISCOVERY == 1)
                 //NOTE the anchor address is set after receiving the ranging init message
@@ -314,9 +317,10 @@ int testapprun_tf(instance_data_t *inst, int message)
          //TAG returns to this state after sending FINAL (or any other exchange) msg.
          //we use prevState as a control variable.
 
-        case TA_TX_WAIT_CONF :
-           //printf("TA_TX_WAIT_CONF") ;
+        case TA_TX_WAIT_CONF:
             {
+            	led_blink(LED_PC6, 5, 200);
+
             	//uint8 temp[5];
             	event_data_t* dw_event = instance_getevent(5); //get and clear this event
 
@@ -363,6 +367,7 @@ int testapprun_tf(instance_data_t *inst, int message)
                     inst->nextState = TA_TXPOLL_WAIT_SEND;  // <----- change this
                     //inst->nextState = TA_RXE_WAIT;
                     //inst->mode = TAG_TDOA;
+
 
 
 
@@ -574,10 +579,9 @@ int testapprun_tf(instance_data_t *inst, int message)
 
 #if (TWSYMRANGE == 1)
 								//need to write the delayed time before starting transmission
+
 								inst->delayedReplyTime32 = ((uint32)dw_event->timeStamp32h + (uint32)inst->fixedFastReplyDelay32h) ;
 								dwt_setdelayedtrxtime(inst->delayedReplyTime32) ;
-
-
 
 								dwt_writetxfctrl((TAG_FINAL_F_MSG_LEN + FRAME_CRTL_AND_ADDRESS_S + FRAME_CRC), FINAL_MSG_OFFSET);
 
@@ -613,7 +617,7 @@ int testapprun_tf(instance_data_t *inst, int message)
 									inst->done = INST_DONE_WAIT_FOR_NEXT_EVENT_TO; //kick off the TagTimeoutTimer (instancetimer) to initiate wakeup
 									inst->testAppState = TA_SLEEP_DONE; //we are going automatically to sleep so no TX confirm interrupt (next state will be TA_SLEEP_DONE)
 									inst->canprintinfo = 1;
-									inst->txmsgcount ++;
+									inst->txmsgcount++;
 									inst->frame_sn++ ; //increment as final is sent
 								}
 
@@ -679,6 +683,8 @@ int testapprun_tf(instance_data_t *inst, int message)
                                     {
                                     	reportTOF_f(inst);
                                         inst->newrange = 1;
+                                        inst->ranges += inst->newrange;
+
                                         inst->lastReportSN = dw_event->msgu.rxmsg_ss.seqNum;
                                         inst->newrangetagaddress = srcAddr[0] + ((uint16) srcAddr[1] << 8);
                                         inst->newrangeancaddress = inst->eui64[0] + ((uint16) inst->eui64[1] << 8);

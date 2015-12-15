@@ -255,7 +255,8 @@ int main(void)
 
     spi_peripheral_init();
 
-    Sleep(1000); //wait for LCD to power on
+    Sleep(10);
+    //Sleep(1000); //wait for LCD to power on
 
     //initLCD();
 
@@ -298,6 +299,9 @@ int main(void)
 				 }
 				 Sleep(100);
 			 }
+
+			 led_blink(LED_PC6, 5, 250);//orng			//orgn
+			 led_blink(LED_PC7, 5, 250);//grn			//red
 
 			 i = 0;
         	 led_off(LED_ALL);

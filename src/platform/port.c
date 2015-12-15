@@ -852,7 +852,17 @@ void led_on (led_t led)
 	}
 }
 
+void led_blink(led_t led, uint8 times, uint16 delay)
+{
+	for ( int i = 1; i <= times; i++)
+	{
+		led_on(led);
+		Sleep(delay);
 
+		led_off(led);
+		Sleep(delay);
+	}
+}
 
 int is_IRQ_enabled(void)
 {
