@@ -315,7 +315,6 @@ int testapprun_tf(instance_data_t *inst, int message)
          //we use prevState as a control variable.
 
         case TA_TX_WAIT_CONF :
-           //printf("TA_TX_WAIT_CONF") ;
             {
             	//uint8 temp[5];
             	event_data_t* dw_event = instance_getevent(5); //get and clear this event
@@ -351,6 +350,9 @@ int testapprun_tf(instance_data_t *inst, int message)
                 if(inst->previousState == TA_TXFINAL_WAIT_SEND)
                 {
 #if (DR_DISCOVERY == 1)
+                	//restart dw device and state machine
+
+
                 	//in Discovery mode anchor is not sending the report to tag go to sleep
                     inst->done = INST_DONE_WAIT_FOR_NEXT_EVENT_TO; //kick off the TagTimeoutTimer (instance timer) to initiate wakeup
 

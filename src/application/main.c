@@ -58,28 +58,6 @@ uint32 inittestapplication(void)
         // SPI not working or Unsupported Device ID
         if((DWT_DEVICE_ID)&(0xFFFF0000) != (devID&0xFFFF0000))
         {
-//        	i=15;
-//        	while(i--)
-//        	{
-//        		if (i & 1) {
-//        			//led_off(LED_PC6);
-//        			led_on(LED_PC6);
-//        			led_off(LED_PC7);
-//        		}
-//        		else{
-//        			//led_on(LED_PC6);
-//        			led_off(LED_PC6);
-//        			led_on(LED_PC7);
-//        		}
-//
-//        		Sleep(300);
-//        	}
-//
-//        		i = 0;
-//
-//        		Sleep(300);
-//        		led_on(LED_ALL);
-//        		Sleep(1400);
         	led_on(LED_PC7);
         	Sleep(1400);
         	return (-1) ;
@@ -127,30 +105,6 @@ uint32 inittestapplication(void)
     if ((DWT_DEVICE_ID)&(0xFFFF0000) != (devID&0xFFFF0000))   // Means it is NOT MP device
     {
         // SPI not working or Unsupported Device ID
-
-//    	i=15;
-//    	        	while(i--)
-//    	        	{
-//    	        		if (i & 1) {
-//    	        			//led_off(LED_PC6);
-//    	        			led_on(LED_PC7);
-//    	        			led_off(LED_PC6);
-//    	        		}
-//    	        		else{
-//    	        			//led_on(LED_PC6);
-//    	        			led_off(LED_PC7);
-//    	        			led_on(LED_PC6);
-//    	        		}
-//
-//    	        		Sleep(300);
-//    	        	}
-//
-//    	        		i = 0;
-//
-
-//    	        		Sleep(300);
-//    	        		led_on(LED_ALL);
-//    	        		Sleep(1400);
 
     	led_on(LED_PC6);
     	Sleep(1400);
@@ -310,11 +264,14 @@ int main(void)
     port_EnableEXT_IRQ(); //enable ScenSor IRQ before starting
 	role_btn_set(ENABLE); //configures interrupt
 
-	//bool dorange = true;
-	//bool test = true;
+	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+    IWDG_SetPrescaler(IWDG_Prescaler_16);
+    IWDG_Enable();
 
     while(1)
     {
+    	IWDG_ReloadCounter();
+
 		role_btn_set(DISABLE);
 
 		instance_run();							//ranging routine
@@ -329,6 +286,8 @@ int main(void)
 
 		if(instancenewrange())
 		{
+			while(1);
+
 			int l = 0, txl = 0, rxl = 0, aaddr, taddr;
 			ranging = 1;
 			//send the new range information to LCD and/or USB

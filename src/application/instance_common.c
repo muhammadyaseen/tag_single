@@ -390,7 +390,7 @@ int instance_init(void)
 	//printf("Vbat = %d (0x%02x) %1.2fV\tVtemp = %d  (0x%02x) %2.2fC\n",temp&0xFF,temp&0xFF, ((0.0057 * (temp&0xFF)) + 2.3), (temp>>8)&0xFF,(temp>>8)&0xFF, ((1.13 * ((temp>>8)&0xFF)) - 113.0));
 
     //this is platform dependant - only program if DW EVK/EVB
-    dwt_setleds(3) ; //configure the GPIOs which control the leds on EVBs
+    //dwt_setleds(3) ; //configure the GPIOs which control the leds on EVBs
 
     if (DWT_SUCCESS != result)
     {
@@ -1143,25 +1143,6 @@ void instance_setapprun(int (*apprun_fn)(instance_data_t *inst, int message))
 // -------------------------------------------------------------------------------------------------------------------
 int instance_run(void)
 {
-
-	/*uint8 i=25;
-	        	                                         while(i--)
-	        	                                         {
-	        	                                             if (i & 1) {
-	        	                                             	led_off(LED_PC6);
-	        	                                             	//led_on(LED_PC7);
-	        	                                             	//led_off(LED_PC7);
-	        	                                             }
-	        	                                             else{
-	        	                                             	led_on(LED_PC6);
-	        	                                             	//led_off(LED_PC7);
-	        	                                             	//led_on(LED_PC7);
-	        	                                             }
-	        	                                             Sleep(100);
-	        	                                         }
-
-	        	                                         i = 0;
-	        	                                 led_off(LED_ALL);*/
 
     int instance = 0 ;
     int done = INST_NOT_DONE_YET;
