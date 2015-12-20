@@ -14,6 +14,7 @@
 #include "instance.h"
 
 #include "deca_spi.h"
+#include "../si/si_tx.h"
 
 int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
 //NOTE: switches TA_SW1_7 and TA_SW1_8 are used to set tag/anchor address
@@ -221,6 +222,45 @@ int main(void)
     port_DisableEXT_IRQ(); //disable ScenSor IRQ until we configure the device
 
 
+
+	 i=5;
+	 while(i--)
+	 {
+		 if (i & 1) {
+			led_off(LED_PC6);
+			led_on(LED_PC7);
+			//led_off(LED_PC7);
+		 }
+		 else{
+			led_on(LED_PC6);
+			led_off(LED_PC7);
+			//led_on(LED_PC7);
+		 }
+		 Sleep(100);
+	 }
+
+	 led_off(LED_ALL);
+
+	 //__disable_irq();
+
+	setup_si_radio();
+
+    //__enable_irq();
+
+    led_on(LED_ALL);
+
+    while(1) {
+//   				led_on(LED_PC6);
+//    				Sleep(1000);
+//
+//    				led_off(LED_PC6);
+//    				Sleep(1000);
+
+    			}
+
+
+    Sleep(2000);
+
     //this 'if' is for pc software, i am commenting this bcz we dont need to run deca ranging on PC
     if(false)
     {
@@ -264,13 +304,13 @@ int main(void)
     port_EnableEXT_IRQ(); //enable ScenSor IRQ before starting
 	role_btn_set(ENABLE); //configures interrupt
 
-	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
-    IWDG_SetPrescaler(IWDG_Prescaler_16);
-    IWDG_Enable();
+	//IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+    //IWDG_SetPrescaler(IWDG_Prescaler_16);
+    //IWDG_Enable();
 
     while(1)
     {
-    	IWDG_ReloadCounter();
+    	//IWDG_ReloadCounter();
 
 		role_btn_set(DISABLE);
 
@@ -286,7 +326,7 @@ int main(void)
 
 		if(instancenewrange())
 		{
-			while(1);
+			//while(1);
 
 			int l = 0, txl = 0, rxl = 0, aaddr, taddr;
 			ranging = 1;

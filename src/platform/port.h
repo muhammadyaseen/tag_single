@@ -223,6 +223,7 @@ void bat_adc_off(void);
 #define SI_SCK					GPIO_Pin_13
 #define SI_MISO					GPIO_Pin_14
 #define SI_MOSI					GPIO_Pin_15
+#define SI_SDN					GPIO_Pin_9
 
 #define SI_BautRatePrescaler 	SPI_BaudRatePrescaler_64
 
