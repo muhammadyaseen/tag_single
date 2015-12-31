@@ -234,96 +234,85 @@ ITStatus EXTI_GetITEnStatus(uint32_t EXTI_Line)
 int RCC_Configuration(void)
 {
 	//SetSysClockToHSE();
-		ErrorStatus HSEStartUpStatus;
-		RCC_ClocksTypeDef RCC_ClockFreq;
+	ErrorStatus HSEStartUpStatus;
+	RCC_ClocksTypeDef RCC_ClockFreq;
 
-		/* RCC system reset(for debug purpose) */
-		RCC_DeInit();
+	/* RCC system reset(for debug purpose) */
+	RCC_DeInit();
 
-		/* Enable HSE */
-		RCC_HSEConfig(RCC_HSE_ON);
+	/* Enable HSE */
+	RCC_HSEConfig(RCC_HSE_ON);
 
-		/* Wait till HSE is ready */
-		HSEStartUpStatus = RCC_WaitForHSEStartUp();
+	/* Wait till HSE is ready */
+	HSEStartUpStatus = RCC_WaitForHSEStartUp();
 
-		if(HSEStartUpStatus != ERROR)
-		{
-			/* Enable Prefetch Buffer */
-			FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
+	if(HSEStartUpStatus != ERROR)
+	{
+		/* Enable Prefetch Buffer */
+		FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
-			/****************************************************************/
-			/*      HSE = 16 MHz, HCLK = 72 MHz, PCLK2 = 72 MHz, PCLK1 = 36 MHz         */
-			/****************************************************************/
-			/* Flash 2 wait state */
-			//FLASH_SetLatency(FLASH_Latency_2);
-			FLASH_SetLatency(FLASH_Latency_0);
-			/* HCLK = SYSCLK */
-			RCC_HCLKConfig(RCC_SYSCLK_Div1);
-			/* PCLK2 = HCLK */
-			RCC_PCLK2Config(RCC_HCLK_Div1);
-			/* PCLK1 = HCLK/2 */
-			RCC_PCLK1Config(RCC_HCLK_Div2);
-			/*  ADCCLK = PCLK2/4 */
-			RCC_ADCCLKConfig(RCC_PCLK2_Div4);
+		/****************************************************************/
+		/*      HSE = 16 MHz, HCLK = 72 MHz, PCLK2 = 72 MHz, PCLK1 = 36 MHz         */
+		/****************************************************************/
+		/* Flash 2 wait state */
+		//FLASH_SetLatency(FLASH_Latency_2);
+		FLASH_SetLatency(FLASH_Latency_0);
+		/* HCLK = SYSCLK */
+		RCC_HCLKConfig(RCC_SYSCLK_Div1);
+		/* PCLK2 = HCLK */
+		RCC_PCLK2Config(RCC_HCLK_Div1);
+		/* PCLK1 = HCLK/2 */
+		RCC_PCLK1Config(RCC_HCLK_Div2);
+		/*  ADCCLK = PCLK2/4 */
+		RCC_ADCCLKConfig(RCC_PCLK2_Div4);
 
-			/* Configure PLLs *********************************************************/
-			/* PLL2 configuration: PLL2CLK = (HSE / 4) * 8 = 24 MHz 			(16/8)*12 = 24 MHz*/
-			//RCC_PREDIV2Config(RCC_PREDIV2_Div4);
-			//RCC_PLL2Config(RCC_PLL2Mul_8);
-			RCC_PREDIV2Config(RCC_PREDIV2_Div8);
-			RCC_PLL2Config(RCC_PLL2Mul_12);
+		/* Configure PLLs *********************************************************/
+		/* PLL2 configuration: PLL2CLK = (HSE / 4) * 8 = 24 MHz 			(16/8)*12 = 24 MHz*/
+		//RCC_PREDIV2Config(RCC_PREDIV2_Div4);
+		//RCC_PLL2Config(RCC_PLL2Mul_8);
+		RCC_PREDIV2Config(RCC_PREDIV2_Div8);
+		RCC_PLL2Config(RCC_PLL2Mul_12);
 
 
-			/* Enable PLL2 */
-			RCC_PLL2Cmd(ENABLE);
+		/* Enable PLL2 */
+		RCC_PLL2Cmd(ENABLE);
 
-			/* Wait till PLL2 is ready */
-			while (RCC_GetFlagStatus(RCC_FLAG_PLL2RDY) == RESET){}
+		/* Wait till PLL2 is ready */
+		while (RCC_GetFlagStatus(RCC_FLAG_PLL2RDY) == RESET){}
 
-			/* PLL1 configuration: PLLCLK = (PLL2 / 3) * 9 = 72 MHz
-			RCC_PREDIV1Config(RCC_PREDIV1_Source_PLL2, RCC_PREDIV1_Div3);
+		/* PLL1 configuration: PLLCLK = (PLL2 / 3) * 9 = 72 MHz
+		RCC_PREDIV1Config(RCC_PREDIV1_Source_PLL2, RCC_PREDIV1_Div3);
 
-			RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
+		RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
 
-			/* Enable PLL */
-			RCC_PLLCmd(ENABLE);
+		/* Enable PLL */
+		RCC_PLLCmd(ENABLE);
 
-			/* Wait till PLL is ready */
-			while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET){}
+		/* Wait till PLL is ready */
+		while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET){}
 
-			/* Select PLL as system clock source */
-			RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+		/* Select PLL as system clock source */
+		RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
 
-			/* Wait till PLL is used as system clock source */
-			while (RCC_GetSYSCLKSource() != 0x08){}
-		}
+		/* Wait till PLL is used as system clock source */
+		while (RCC_GetSYSCLKSource() != 0x08){}
+	}
 
-		RCC_GetClocksFreq(&RCC_ClockFreq);
+	RCC_GetClocksFreq(&RCC_ClockFreq);
 
-		/* Enable SPI1 clock */
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
+	/* Enable SPI1 clock */
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 
-		/* Enable SPI2 clock */
-		RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+	/* Enable SPI2 clock */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
 
-		/* Enable GPIOs clocks */
-		RCC_APB2PeriphClockCmd(
-							RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |
-							RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD |
-							RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO  |
-							RCC_APB2Periph_USART1 ,
-							ENABLE);
-	//MCO Pin Setup
-
-//	GPIO_InitTypeDef GPIO_InitStructure;
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//
-//	GPIO_Init(GPIOA, &GPIO_InitStructure);
-//
-//	RCC_MCOConfig(RCC_MCO_HSE);
+	/* Enable GPIOs clocks */
+	RCC_APB2PeriphClockCmd(
+						RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |
+						RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD |
+						RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO  |
+						RCC_APB2Periph_USART1 ,
+						ENABLE);
 
 	return 0;
 }
@@ -584,7 +573,7 @@ int GPIO_Configuration(void)
 
 #ifdef SAFETY_VEST
 
-	// battery to ADC connector switch
+	 //battery to ADC connector switch
 //	GPIO_InitStructure.GPIO_Pin = BAT_ADC_SW ;
 //	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 //	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -1012,7 +1001,9 @@ void bat_Init(void)				//	Initialise battery
 uint16_t read_BAT_voltage()
 {
 	uint16_t ADC_val;
+
 	bat_adc_on();
+
 	ADC_RegularChannelConfig(ADC1, BAT_ADC_CHANNEL, 1, ADC_SampleTime_1Cycles5);
 	// Start the conversion
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
@@ -1170,7 +1161,7 @@ void ADC_Configuration(void)
   ADC_InitTypeDef  ADC_InitStructure;
   /* PCLK2 is the APB2 clock */
   /* ADCCLK = PCLK2/6 = 72/6 = 12MHz*/
-  RCC_ADCCLKConfig(RCC_PCLK2_Div6);
+  //RCC_ADCCLKConfig(RCC_PCLK2_Div6);
 
   /* Enable ADC1 clock so that we can talk to it */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
@@ -1196,6 +1187,8 @@ void ADC_Configuration(void)
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
 
+  bat_adc_on();
+
   /* Enable ADC1 reset calibaration register */
   ADC_ResetCalibration(ADC1);
   /* Check the end of ADC1 reset calibration register */
@@ -1204,15 +1197,23 @@ void ADC_Configuration(void)
   ADC_StartCalibration(ADC1);
   /* Check the end of ADC1 calibration */
   while(ADC_GetCalibrationStatus(ADC1));
+
+  bat_adc_off();
+
 }
 
 uint16 readADC1(uint8 channel)
 {
+   //bat_adc_on();
+
   ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_1Cycles5);
   // Start the conversion
   ADC_SoftwareStartConvCmd(ADC1, ENABLE);
   // Wait until conversion completion
   while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+
+  //bat_adc_off();
+
   // Get the conversion value
   return ADC_GetConversionValue(ADC1);
 }

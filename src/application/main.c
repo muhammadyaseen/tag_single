@@ -15,6 +15,7 @@
 #include "instance.h"
 
 #include "deca_spi.h"
+#include "eeprom.h"
 #include "../si/si_tx.h"
 
 int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 = 0xDECA020000000003
@@ -25,6 +26,7 @@ int instance_anchaddr = 0; //0 = 0xDECA020000000001; 1 = 0xDECA020000000002; 2 =
 //int instance_mode = TAG_TDOA;
 //int instance_mode = LISTENER;
 
+uint16_t VirtAddVarTab[10]={0,1,2,3,4,5,6,7,8,9};
 
 uint32 inittestapplication(void);
 
@@ -205,11 +207,87 @@ int main(void)
     double avg_result = 0;
     uint8 dataseq1[40];
 
-    led_off(LED_ALL); //turn off all the LEDs
+    uint16 adc_values[10] = { 0x1234, 0xABCD, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000};	//idx 0--9
 
     peripherals_init();
 
     spi_peripheral_init();
+
+    ADC_Configuration();
+
+    //uint8 delta = 0;
+
+    uint8 idx = 2;
+
+    while(idx < 10) {
+
+    	bat_adc_on();
+    	uint16 readingOn = readADC1(BAT_ADC_CHANNEL);
+
+    	//adc_values[idx] = readingOn;
+
+    	idx++;
+
+    	bat_adc_off();
+    	uint16 readingOff = readADC1(BAT_ADC_CHANNEL);
+
+
+		if ( readingOff < 100 )
+		{
+			led_on(LED_PC6);
+			Sleep(700);
+			led_off(LED_PC6);
+		}
+
+		//if ( readingOn > 1550 && readingOn < 1750 )
+		if ( readingOn > 1600 && readingOn < 1660 )
+		{
+			led_on(LED_PC7);
+			Sleep(700);
+			led_off(LED_PC7);
+		}
+
+    }
+
+    //write readings to FLASH
+
+    /* Unlock the Flash Program Erase controller */
+    FLASH_Unlock();
+
+    /* EEPROM Init */
+    EE_Init();
+
+      EE_WriteVariable(1, 0x12AB);
+
+      uint16_t* Data_1;
+
+      EE_ReadVariable(1, &Data_1);
+
+      if ( Data_1 == (uint16_t) 0x12AB )
+      {
+    	  led_on(LED_PC7);
+    	  Sleep(400);
+		  led_off(LED_PC7);
+		  Sleep(400);
+
+		  led_on(LED_PC7);
+		  Sleep(400);
+		  led_off(LED_PC7);
+		  Sleep(400);
+
+		  led_on(LED_PC6);
+		  Sleep(400);
+		  led_off(LED_PC6);
+		  Sleep(400);
+
+		   led_on(LED_PC6);
+		   Sleep(400);
+		   led_off(LED_PC6);
+	        Sleep(400);
+      }
+
+    FLASH_Lock();
+
 
     Sleep(1000); //wait for LCD to power on
 
@@ -218,42 +296,30 @@ int main(void)
     //init_dw();
 
     //UART Loopback
-//    while(1)
-//    {
-//		led_on(LED_PC7);
-//		Sleep(500);
-//		led_off(LED_PC7);
-//		Sleep(500);
-//
-//		while(1)
-//		{
-//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
-//
-//		USART_SendData(USART1, 0x41);
-//		}
+    while(1)
+    {
+    	led_on(LED_PC7);
+    	Sleep(700);
+    	led_off(LED_PC7);
+    	Sleep(700);
 
-//		USART_SendData(USART1, 0x37);
-//
-//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
-//
-//		USART_SendData(USART1, 0x35);
-//
-//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
-//
-//		Sleep(500);
+		USART_SendData(USART1, 0x32);
 
-//		while (USART_GetFlagStatus(USART1 , USART_FLAG_RXNE) == RESET);
-//
-//		uint8 rxbyte = USART_ReceiveData(USART1);
-//
-//		if ( rxbyte == 0x15 )
-//		{
-//				led_on(LED_PC6);
-//				Sleep(500);
-//				led_off(LED_PC6);
-//				Sleep(500);
-//		}
-//    }
+		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
+
+		while (USART_GetFlagStatus(USART1 , USART_FLAG_RXNE) == RESET);
+
+		uint16_t rxbyte = USART_ReceiveData(USART1);
+
+		if ( rxbyte == (uint16_t)0x32 )
+		{
+				led_on(LED_PC6);
+				Sleep(1500);
+				led_off(LED_PC6);
+				Sleep(1500);
+		}
+    }
+
     role_btn_set(DISABLE);//emergency button settings
 
 

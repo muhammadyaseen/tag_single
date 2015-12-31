@@ -197,7 +197,7 @@ int NVIC_DisableDECAIRQ(void);
 //uint8 rangeStart = 0;
 ///////////////////////////////// peripherals for battery connection ///////////////////
 //#define BAT_SWITCH_GPIO     	GPIOB			//
-#define BAT_ADC_CHANNEL			10				//	battery voltage connected to ADC channel 10
+#define BAT_ADC_CHANNEL			ADC_Channel_10			//10	//	battery voltage connected to ADC channel 10
 
 #define BAT_LOW_LED     	GPIO_Pin_6		//	low battery detection LED connected to PC6 (LED1)
 
@@ -288,7 +288,8 @@ extern volatile u32 g_TimeDelayCurCounts;
 
 
 void Delay(u32 timecounts);
-
+void ADC_Configuration(void);
+uint16 readADC1(uint8 channel);
 // ======================================================================================
 
 #ifdef __cplusplus
