@@ -1,34 +1,26 @@
 
 #include "si_tx.h"
 
-unsigned char RF_MODEM_CLKGEN_BAND_1_data[] = 		{RF_MODEM_CLKGEN_BAND_1};
-unsigned char RF_FREQ_CONTROL_INTE_8_data[] = 		{RF_FREQ_CONTROL_INTE_8};
-unsigned char RF_POWER_UP_data[] = 			   		{ RF_POWER_UP};
-unsigned char RF_GPIO_PIN_CFG_data[] = 			   	{ RF_GPIO_PIN_CFG};
-unsigned char RF_GLOBAL_XO_TUNE_1_data[] = 		   	{ RF_GLOBAL_XO_TUNE_1};
-unsigned char RF_GLOBAL_CONFIG_1_data[] = 		   	{ RF_GLOBAL_CONFIG_1};
-unsigned char RF_FRR_CTL_A_MODE_4_data[] = 		   	{ RF_FRR_CTL_A_MODE_4};
-unsigned char RF_PREAMBLE_TX_LENGTH_9_data[] = 		{ RF_PREAMBLE_TX_LENGTH_9};
-unsigned char RF_SYNC_CONFIG_5_data[] = 		 	   	{ RF_SYNC_CONFIG_5};
-unsigned char RF_PKT_CRC_CONFIG_1_data[] = 		   	{ RF_PKT_CRC_CONFIG_1};
-unsigned char RF_PKT_CONFIG1_1_data[] = 			   	{ RF_PKT_CONFIG1_1};
-unsigned char RF_PKT_LEN_3_data[] = 			   		{ RF_PKT_LEN_3};
-unsigned char RF_PKT_FIELD_1_LENGTH_12_8_12_data[] =	{ RF_PKT_FIELD_1_LENGTH_12_8_12};
-unsigned char RF_PKT_FIELD_4_LENGTH_12_8_8_data[] = 	{ RF_PKT_FIELD_4_LENGTH_12_8_8};
-unsigned char RF_MODEM_FREQ_DEV_0_1_data[] = 		   	{ RF_MODEM_FREQ_DEV_0_1};
-unsigned char RF_MODEM_AGC_CONTROL_1_data[] = 		{ RF_MODEM_AGC_CONTROL_1};
-unsigned char RF_MATCH_VALUE_1_12_data[] =            { RF_MATCH_VALUE_1_12};
-unsigned char RF_MODEM_RSSI_COMP_1_data[] = 			{ RF_MODEM_RSSI_COMP_1};
-unsigned char RF_MODEM_MOD_TYPE_12_data[]=			{RF_MODEM_MOD_TYPE_12};
-unsigned char RF_MODEM_TX_RAMP_DELAY_8_data[]=				{RF_MODEM_TX_RAMP_DELAY_8};
-unsigned char RF_MODEM_BCR_OSR_1_9_data[]=					{RF_MODEM_BCR_OSR_1_9};
-unsigned char RF_MODEM_AFC_GEAR_7_data[]=						{RF_MODEM_AFC_GEAR_7};
-unsigned char RF_MODEM_AGC_WINDOW_SIZE_9_data[]=				{RF_MODEM_AGC_WINDOW_SIZE_9};
-unsigned char RF_MODEM_OOK_CNT1_11_data[]=					{RF_MODEM_OOK_CNT1_11};
-unsigned char RF_MODEM_CHFLT_RX1_CHFLT_COE13_7_0_12_data[]=	{RF_MODEM_CHFLT_RX1_CHFLT_COE13_7_0_12};
-unsigned char RF_MODEM_CHFLT_RX1_CHFLT_COE1_7_0_12_data[]=	{RF_MODEM_CHFLT_RX1_CHFLT_COE1_7_0_12};
-unsigned char RF_MODEM_CHFLT_RX2_CHFLT_COE7_7_0_12_data[]=	{RF_MODEM_CHFLT_RX2_CHFLT_COE7_7_0_12};
-unsigned char RF_SYNTH_PFDCP_CPFF_7_data[]=					{RF_SYNTH_PFDCP_CPFF_7};
+//const unsigned char RF_MODEM_DSA_CTRL1_5_data[] = 		{RF_MODEM_DSA_CTRL1_5};
+ unsigned char RF_FREQ_CONTROL_INTE_8_data[] = 		{RF_FREQ_CONTROL_INTE_8};
+ unsigned char RF_POWER_UP_data[] = 			   		{ RF_POWER_UP};
+
+ unsigned char RF_FRR_CTL_A_MODE_4_data[] = 		   	{ RF_FRR_CTL_A_MODE_4};
+
+ unsigned char RF_MODEM_FREQ_DEV_0_1_data[] = 		   	{ RF_MODEM_FREQ_DEV_0_1};
+ unsigned char RF_MODEM_AGC_CONTROL_1_data[] = 		{ RF_MODEM_AGC_CONTROL_1};
+ unsigned char RF_MODEM_MOD_TYPE_12_data[]=			{RF_MODEM_MOD_TYPE_12};
+ unsigned char RF_MODEM_TX_RAMP_DELAY_12_data[]=				{RF_MODEM_TX_RAMP_DELAY_12};
+ unsigned char BCR_NCO_OFFSET_2_12_data[]=					{RF_MODEM_BCR_NCO_OFFSET_2_12};
+ unsigned char RF_MODEM_AFC_LIMITER_1_3_data[]=						{RF_MODEM_AFC_LIMITER_1_3};
+ unsigned char AGC_WINDOW_SIZE_12_data[]=				{RF_MODEM_AGC_WINDOW_SIZE_12};
+ unsigned char RF_MODEM_RAW_CONTROL_8_data[]=					{RF_MODEM_RAW_CONTROL_8};
+ unsigned char COE13_7_0_12_data[]=	{RF_MODEM_CHFLT_RX1_CHFLT_COE13_7_0_12};
+ unsigned char COE1_7_0_12_data[]=	{RF_MODEM_CHFLT_RX1_CHFLT_COE1_7_0_12};
+ unsigned char COE7_7_0_12_data[]=	{RF_MODEM_CHFLT_RX2_CHFLT_COE7_7_0_12};
+ unsigned char RF_SYNTH_PFDCP_CPFF_7_data[]=					{RF_SYNTH_PFDCP_CPFF_7};
+ unsigned char RF_MODEM_RAW_SEARCH2_2_data[]={RF_MODEM_RAW_SEARCH2_2};
+
 
 unsigned char tx_test_aa_data[14] = {0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa,0xaa};
 unsigned char tx_ph_data[14] = {'s','w','w','x',0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x6d};
@@ -54,7 +46,7 @@ void setup_si_radio()
 
 	if ( spi_read_buf[2] == 0x44 && (spi_read_buf[3] & 0xF0) == 0x60 )
 	{
-		while(1) {
+		//while(1) {
 							led_on(LED_PC6);
 							Sleep(2000);
 							led_on(LED_PC7);
@@ -64,42 +56,37 @@ void setup_si_radio()
 							led_off(LED_PC7);
 							Sleep(2000);
 
-						}
+			//			}
 
 
 	}
-	//if ( spi_read_buf[2] > 0 || spi_read_buf[3] > 0 || spi_read_buf[4] > 0 || spi_read_buf[1] > 0 )
 
-//	for ( int k = 0; k <=8; k++)
-//	{
-//		if( spi_read_buf[k] == (U8)0x44)
-//		{
-//			while(1) {
-//					led_on(LED_PC6);
-//					Sleep(250);
-//					led_on(LED_PC7);
-//					Sleep(250);
-//					led_off(LED_PC6);
-//					Sleep(250);
-//					led_off(LED_PC7);
-//					Sleep(250);
-//
-//				}
-//		}
-//	}
-//	if (   spi_read_buf[0] == 0x44 || spi_read_buf[1] == 0x44 || spi_read_buf[2] == 0x44 || spi_read_buf[3] == 0x44
-//			|| spi_read_buf[4] == 0x44 || spi_read_buf[5] == 0x44 || spi_read_buf[6] == 0x44 || spi_read_buf[7] == 0x44
-//			|| spi_read_buf[8] == 0x44 || spi_read_buf[9] == 0x44
-//	    )
-//	{
-		// 0x446X
-		//dance and sing
-		//keep blinking
+	Sleep(20);
 
+	SI4463_init();  // RF init
 
-	//}
+	Sleep(1000);
 
-	Sleep(2000);
+	while( 1 )		//send packet every three seconds
+	{
+
+		Sleep(3000);
+		for( int j = 0; j < 3; j++)
+		{
+
+			 led_off(LED_PC7);
+			 //led_on(LED_PC6);
+			 Sleep(200);
+
+			 //led_off(LED_PC6);
+			 led_on(LED_PC7);
+			 Sleep(200);
+
+		}
+		tx_data();
+
+		//rf_standby();
+	}
 
 	/*count_1hz = 0;
 	Flag.reach_1s = 0;
@@ -117,7 +104,7 @@ void setup_si_radio()
 
 void SI4463_init(void)
 {
-	U8 app_command_buf[20],i;
+	U8 app_command_buf[20];
 
 	//spi_write(0x07, RF_GPIO_PIN_CFG_data);
 	app_command_buf[0] = 0x13;			// SET GPIO PORT
@@ -161,7 +148,7 @@ void SI4463_init(void)
 	app_command_buf[10]  = 0x00;
 	app_command_buf[11]  = 0x00;
 	app_command_buf[12]  = 0x00;
-	spi_write(13, app_command_buf);  //
+	spi_write(13, app_command_buf);
 
 	//  RF_SYNC_CONFIG_5_data,							// set sync
     app_command_buf[0] = 0x11;
@@ -237,12 +224,16 @@ void SI4463_init(void)
     spi_write(0x10, RF_MODEM_MOD_TYPE_12_data);
 	spi_write(0x05, RF_MODEM_FREQ_DEV_0_1_data);
 
-    spi_write(0x0C, RF_MODEM_TX_RAMP_DELAY_8_data);
-    spi_write(0x0D, RF_MODEM_BCR_OSR_1_9_data);
-    spi_write(0x0B, RF_MODEM_AFC_GEAR_7_data);
+    spi_write(0x10, RF_MODEM_TX_RAMP_DELAY_12_data);
+    spi_write(0x10, BCR_NCO_OFFSET_2_12_data);
+	spi_write(0x10, RF_MODEM_TX_RAMP_DELAY_12_data);
+    spi_write(0x07, RF_MODEM_AFC_LIMITER_1_3_data);
+	//spi_write(0x10, BCR_NCO_OFFSET_2_12_data);
+
     spi_write(0x05, RF_MODEM_AGC_CONTROL_1_data);
-    spi_write(0x0D, RF_MODEM_AGC_WINDOW_SIZE_9_data);
-    spi_write(0x0F, RF_MODEM_OOK_CNT1_11_data);
+    spi_write(0x10, AGC_WINDOW_SIZE_12_data);
+    spi_write(0x0c, RF_MODEM_RAW_CONTROL_8_data);
+//	spi_write(0x10, AGC_WINDOW_SIZE_12_data);
 
 	// spi_write(0x05, RF_MODEM_RSSI_COMP_1_data);
 	app_command_buf[0] = 0x11;
@@ -252,9 +243,9 @@ void SI4463_init(void)
 	app_command_buf[4]  = 0x40;
     spi_write(5, app_command_buf);
 
-    spi_write(0x10, RF_MODEM_CHFLT_RX1_CHFLT_COE13_7_0_12_data);
-    spi_write(0x10, RF_MODEM_CHFLT_RX1_CHFLT_COE1_7_0_12_data);
-    spi_write(0x10, RF_MODEM_CHFLT_RX2_CHFLT_COE7_7_0_12_data);
+    spi_write(0x10, COE13_7_0_12_data);
+    spi_write(0x10, COE1_7_0_12_data);
+    spi_write(0x10, COE7_7_0_12_data);
 
 	// RF_PA
 	app_command_buf[0] = 0x11;
@@ -285,13 +276,14 @@ void SI4463_init(void)
 	app_command_buf[12]  =0x02;
 	app_command_buf[13]  = 'x';
 	app_command_buf[14]  = 0xff;
+	app_command_buf[15]  =0x03;
     spi_write(16, app_command_buf);
 
-	spi_write(5, RF_MODEM_CLKGEN_BAND_1_data);
+	spi_write(6, RF_MODEM_RAW_SEARCH2_2_data);
     spi_write(12, RF_FREQ_CONTROL_INTE_8_data); 	    // set frequency
 }
 
-void fifo_reset(void)
+void fifo_reset(void)			// reset FIFO
 {
 	U8 p[2];
 
@@ -302,28 +294,47 @@ void fifo_reset(void)
 
 void clr_interrupt(void)
 {
+// since you are clearning ALL the interrupts before reading , doesnt this mean that every time the read response will be zero ??
+//what is the purpose of spi_read(9,GET_INT_STATUS); here.. My understandng is that it will always read zero. because all the interrupts
+//are cleared by spi_write(4,p); command
 	U8 p[4];
 
+	spi_read(9,GET_INT_STATUS);
 	p[0] = GET_INT_STATUS;
 	p[1] = 0;   // clr  PH pending
 	p[2] = 0;   // clr modem_pending
 	p[3] = 0;   // clr chip pending
 	spi_write(4,p);
-	spi_read(9,GET_INT_STATUS);
 }
+
 
 void enable_tx_interrupt(void)
 {
 	U8 p[6];
 
-	p[0] = 0x11;
+	p[0] = 0x11;  //SET_PROPERTY command
 	p[1] = 0x01;  // 0x0100
-	p[2] = 0x02;   // 2 parameters
-	p[3] = 0x00;  // 0x0100
-	p[4] = 0x01;   // Ph  int
+	p[2] = 0x02;   // 2 properties to be set
+	p[3] = 0x00;  // 0x0100		start property
+	p[4] = 0x01;   // Interrupt enable property value,
 	p[5] = 0x20; //  enable  packet sent interrupt
 	spi_write(0x06, p);
 }
+
+void enable_rx_interrupt(void)
+{
+	U8 p[7];
+
+	p[0] = 0x11;
+	p[1] = 0x01;  // 0x0100
+	p[2] = 0x03;  // 3 parameters
+	p[3] = 0x00;   // 0100
+	p[4] = 0x03;   // ph, modem int
+	p[5] = 0x18; // 0x10;   // Pack received int
+	p[6] = 0x00;   //preamble int, sync int setting
+	spi_write(0x07, p);  // enable  packet receive interrupt
+}
+
 
 void rf_standby(void)
 {
@@ -350,28 +361,80 @@ void tx_data(void)
 {
 	unsigned char i;
 
-	Flag.is_tx = 1;
+	//Flag.is_tx = 1;
 	//LED_RED ^= 1;
-	fifo_reset();  // clr fifo
-	spi_write_fifo();  // load data to fifo
-	enable_tx_interrupt();
-	clr_interrupt();  // clr INT Factor
-	tx_start();    // enter TX mode
-	rf_timeout = 0;
-	Flag.rf_reach_timeout = 0;
 
-	while(nIRQ)		// wait INT
+	fifo_reset();  // clr fifo
+
+	spi_write_fifo();  // load data to fifo
+
+	enable_tx_interrupt();
+
+	clr_interrupt();  // clr INT Factor
+
+	tx_start();    // enter TX mode, sent data
+
+
+	//TODO: wait for packet sent interrupt
+
+	//clr_interrupt();
+
+			//check for PACKET_SENT interrupt flag
+	do
 	{
+		Sleep(10);
+		//clr_interrupt();
+		spi_read(9, GET_INT_STATUS);
+
+	} while ( (spi_read_buf[4] & 0x20) != 0x20 );
+
+	//clr_interrupt();
+
+	//rf_timeout = 0;
+
+	//Flag.rf_reach_timeout = 0;
+
+	//while(nIRQ)		// wait INT
+	//{
 		//wdtr = 0;
 		//wdtr = 0xff;
-		if(Flag.rf_reach_timeout)
-		{
-			sdn_reset();
- 			SI4463_init();  // RF timeout,need init RF
-			break;
-		}
-	}
+	//	if(Flag.rf_reach_timeout)
+	//	{
+	//		sdn_reset();
+ 	//		SI4463_init();  // RF timeout,need init RF
+	//		break;
+	//	}
+	//}
 }
+
+void rx_init(void)
+{
+	//Flag.is_tx = 0;
+
+	fifo_reset();  // clr fifo
+
+	enable_rx_interrupt();
+
+	clr_interrupt();  // clr INT Factor
+
+	rx_start();
+}
+
+void rx_start(void)
+{
+	U8 p[8];
+
+	p[0] = START_RX ;
+	p[1] = FREQ_CHANNEL ; // channel 0
+	p[2] = 0x00;
+	p[3] = 0;
+	p[4] = 0;
+	p[5] = 0;  // unchanged after preamble timeout
+	p[6] = 0x08;
+	p[7] = 0x08;
+	spi_write(8, p);
+}
+
 
 U8 spi_byte(U8 data)
 {
@@ -398,8 +461,6 @@ U8 spi_byte(U8 data)
 	//CLR_SI_SCK();
 
 	//SI_NSEL_CLR();
-
-
 
 	SI_SPI->DR = data;
 	while ((SI_SPI->SR & SPI_I2S_FLAG_RXNE) == (uint16_t)RESET);

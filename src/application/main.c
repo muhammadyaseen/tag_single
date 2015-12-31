@@ -9,6 +9,7 @@
 /* Includes */
 #include <data_types.h>
 #include "compiler.h"
+#include <stm32f10x_usart.h>
 #include "port.h"
 
 #include "instance.h"
@@ -216,6 +217,43 @@ int main(void)
 
     //init_dw();
 
+    //UART Loopback
+//    while(1)
+//    {
+//		led_on(LED_PC7);
+//		Sleep(500);
+//		led_off(LED_PC7);
+//		Sleep(500);
+//
+//		while(1)
+//		{
+//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
+//
+//		USART_SendData(USART1, 0x41);
+//		}
+
+//		USART_SendData(USART1, 0x37);
+//
+//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
+//
+//		USART_SendData(USART1, 0x35);
+//
+//		while (USART_GetFlagStatus(USART1 , USART_FLAG_TXE) == RESET);
+//
+//		Sleep(500);
+
+//		while (USART_GetFlagStatus(USART1 , USART_FLAG_RXNE) == RESET);
+//
+//		uint8 rxbyte = USART_ReceiveData(USART1);
+//
+//		if ( rxbyte == 0x15 )
+//		{
+//				led_on(LED_PC6);
+//				Sleep(500);
+//				led_off(LED_PC6);
+//				Sleep(500);
+//		}
+//    }
     role_btn_set(DISABLE);//emergency button settings
 
 
@@ -243,21 +281,11 @@ int main(void)
 
 	 //__disable_irq();
 
-	setup_si_radio();
+	//setup_si_radio();
 
     //__enable_irq();
 
     led_on(LED_ALL);
-
-    while(1) {
-//   				led_on(LED_PC6);
-//    				Sleep(1000);
-//
-//    				led_off(LED_PC6);
-//    				Sleep(1000);
-
-    			}
-
 
     Sleep(2000);
 

@@ -29,6 +29,7 @@
 #define touch_screen_init(x)		No_Configuration(x)
 
 
+
 /* System tick 32 bit variable defined by the platform */
 extern __IO unsigned long time32_incr;
 
@@ -232,117 +233,145 @@ ITStatus EXTI_GetITEnStatus(uint32_t EXTI_Line)
 
 int RCC_Configuration(void)
 {
-	ErrorStatus HSEStartUpStatus;
-	RCC_ClocksTypeDef RCC_ClockFreq;
+	//SetSysClockToHSE();
+		ErrorStatus HSEStartUpStatus;
+		RCC_ClocksTypeDef RCC_ClockFreq;
 
-	/* RCC system reset(for debug purpose) */
-	RCC_DeInit();
+		/* RCC system reset(for debug purpose) */
+		RCC_DeInit();
 
-	/* Enable HSE */
-	RCC_HSEConfig(RCC_HSE_ON);
+		/* Enable HSE */
+		RCC_HSEConfig(RCC_HSE_ON);
 
-	/* Wait till HSE is ready */
-	HSEStartUpStatus = RCC_WaitForHSEStartUp();
+		/* Wait till HSE is ready */
+		HSEStartUpStatus = RCC_WaitForHSEStartUp();
 
-	if(HSEStartUpStatus != ERROR)
-	{
-		/* Enable Prefetch Buffer */
-		FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
+		if(HSEStartUpStatus != ERROR)
+		{
+			/* Enable Prefetch Buffer */
+			FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
-		/****************************************************************/
-		/*      HSE=25MHz, HCLK=72MHz, PCLK2=72MHz, PCLK1=36MHz         */
-		/****************************************************************/
-		/* Flash 2 wait state */
-		FLASH_SetLatency(FLASH_Latency_2);
-		/* HCLK = SYSCLK */
-		RCC_HCLKConfig(RCC_SYSCLK_Div1);
-		/* PCLK2 = HCLK */
-		RCC_PCLK2Config(RCC_HCLK_Div1);
-		/* PCLK1 = HCLK/2 */
-		RCC_PCLK1Config(RCC_HCLK_Div2);
-		/*  ADCCLK = PCLK2/4 */
-		RCC_ADCCLKConfig(RCC_PCLK2_Div6);
+			/****************************************************************/
+			/*      HSE = 16 MHz, HCLK = 72 MHz, PCLK2 = 72 MHz, PCLK1 = 36 MHz         */
+			/****************************************************************/
+			/* Flash 2 wait state */
+			//FLASH_SetLatency(FLASH_Latency_2);
+			FLASH_SetLatency(FLASH_Latency_0);
+			/* HCLK = SYSCLK */
+			RCC_HCLKConfig(RCC_SYSCLK_Div1);
+			/* PCLK2 = HCLK */
+			RCC_PCLK2Config(RCC_HCLK_Div1);
+			/* PCLK1 = HCLK/2 */
+			RCC_PCLK1Config(RCC_HCLK_Div2);
+			/*  ADCCLK = PCLK2/4 */
+			RCC_ADCCLKConfig(RCC_PCLK2_Div4);
 
-		/* Configure PLLs *********************************************************/
-		/* PLL2 configuration: PLL2CLK = (HSE / 4) * 8 = 24 MHz */
-		RCC_PREDIV2Config(RCC_PREDIV2_Div4);
-		RCC_PLL2Config(RCC_PLL2Mul_8);
+			/* Configure PLLs *********************************************************/
+			/* PLL2 configuration: PLL2CLK = (HSE / 4) * 8 = 24 MHz 			(16/8)*12 = 24 MHz*/
+			//RCC_PREDIV2Config(RCC_PREDIV2_Div4);
+			//RCC_PLL2Config(RCC_PLL2Mul_8);
+			RCC_PREDIV2Config(RCC_PREDIV2_Div8);
+			RCC_PLL2Config(RCC_PLL2Mul_12);
 
-		/* Enable PLL2 */
-		RCC_PLL2Cmd(ENABLE);
 
-		/* Wait till PLL2 is ready */
-		while (RCC_GetFlagStatus(RCC_FLAG_PLL2RDY) == RESET){}
+			/* Enable PLL2 */
+			RCC_PLL2Cmd(ENABLE);
 
-		/* PLL1 configuration: PLLCLK = (PLL2 / 3) * 9 = 72 MHz */
-		RCC_PREDIV1Config(RCC_PREDIV1_Source_PLL2, RCC_PREDIV1_Div3);
+			/* Wait till PLL2 is ready */
+			while (RCC_GetFlagStatus(RCC_FLAG_PLL2RDY) == RESET){}
 
-		RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
+			/* PLL1 configuration: PLLCLK = (PLL2 / 3) * 9 = 72 MHz
+			RCC_PREDIV1Config(RCC_PREDIV1_Source_PLL2, RCC_PREDIV1_Div3);
 
-		/* Enable PLL */
-		RCC_PLLCmd(ENABLE);
+			RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_9);
 
-		/* Wait till PLL is ready */
-		while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET){}
+			/* Enable PLL */
+			RCC_PLLCmd(ENABLE);
 
-		/* Select PLL as system clock source */
-		RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+			/* Wait till PLL is ready */
+			while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET){}
 
-		/* Wait till PLL is used as system clock source */
-		while (RCC_GetSYSCLKSource() != 0x08){}
-	}
+			/* Select PLL as system clock source */
+			RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
 
-	RCC_GetClocksFreq(&RCC_ClockFreq);
+			/* Wait till PLL is used as system clock source */
+			while (RCC_GetSYSCLKSource() != 0x08){}
+		}
 
-	/* Enable SPI1 clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
+		RCC_GetClocksFreq(&RCC_ClockFreq);
 
-	/* Enable SPI2 clock */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+		/* Enable SPI1 clock */
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 
-	/* Enable GPIOs clocks */
-	RCC_APB2PeriphClockCmd(
-						RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |
-						RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD |
-						RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO,
-						ENABLE);
+		/* Enable SPI2 clock */
+		RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+
+		/* Enable GPIOs clocks */
+		RCC_APB2PeriphClockCmd(
+							RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |
+							RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD |
+							RCC_APB2Periph_GPIOE | RCC_APB2Periph_AFIO  |
+							RCC_APB2Periph_USART1 ,
+							ENABLE);
+	//MCO Pin Setup
+
+//	GPIO_InitTypeDef GPIO_InitStructure;
+//
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//
+//	GPIO_Init(GPIOA, &GPIO_InitStructure);
+//
+//	RCC_MCOConfig(RCC_MCO_HSE);
 
 	return 0;
 }
 
 int USART_Configuration(void)
 {
-#if 0
+
+	//USART_DeInit(USART1);
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+	USART_Cmd(USART1, ENABLE);
+
 	USART_InitTypeDef USART_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	// USARTx setup
-	USART_InitStructure.USART_BaudRate = 115200;
+	USART_InitStructure.USART_BaudRate = 300;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
-	USART_Init(USARTx, &USART_InitStructure);
+	//USART_Init(USARTx, &USART_InitStructure);
+	USART_Init(USART1, &USART_InitStructure);
 
 	// USARTx TX pin setup
-	GPIO_InitStructure.GPIO_Pin = USARTx_TX;
+	//GPIO_InitStructure.GPIO_Pin = USARTx_TX;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 
-	GPIO_Init(USARTx_GPIO, &GPIO_InitStructure);
+	//GPIO_Init(USARTx_GPIO, &GPIO_InitStructure);
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	// USARTx RX pin setup
-	GPIO_InitStructure.GPIO_Pin = USARTx_RX;
+//	GPIO_InitStructure.GPIO_Pin = USARTx_RX;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 
-	GPIO_Init(USARTx_GPIO, &GPIO_InitStructure);
+	//GPIO_Init(USARTx_GPIO, &GPIO_InitStructure);
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	// Enable USARTx
-	USART_Cmd(USARTx, ENABLE);
-#endif
+	//USART_Cmd(USARTx, ENABLE);
+	USART_Cmd(USART1, ENABLE);
+
     return 0;
 }
 
@@ -910,7 +939,7 @@ int peripherals_init (void)
 	timer_init();
 	interrupt_init();
 	//alertInit();
-//	usart_init();
+	usart_init();
 	//spi_init();
 	ethernet_init();
 	//fs_init();
@@ -928,7 +957,7 @@ void spi_peripheral_init()
 {
 	spi_init();
 
-	SPI2_Configuration();
+	//SPI2_Configuration();
 
 #ifdef SAFETY_VEST
 	//SI_IntConfig(); // configure Si4463 device interface
@@ -1136,3 +1165,54 @@ void Delay(u32 timecounts)
   for(i = 0 ; i < timecounts ; ++i){;}
 }
 
+void ADC_Configuration(void)
+{
+  ADC_InitTypeDef  ADC_InitStructure;
+  /* PCLK2 is the APB2 clock */
+  /* ADCCLK = PCLK2/6 = 72/6 = 12MHz*/
+  RCC_ADCCLKConfig(RCC_PCLK2_Div6);
+
+  /* Enable ADC1 clock so that we can talk to it */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  /* Put everything back to power-on defaults */
+  ADC_DeInit(ADC1);
+
+  /* ADC1 Configuration ------------------------------------------------------*/
+  /* ADC1 and ADC2 operate independently */
+  ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+  /* Disable the scan conversion so we do one at a time */
+  ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+  /* Don't do contimuous conversions - do them on demand */
+  ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+  /* Start conversin by software, not an external trigger */
+  ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+  /* Conversions are 12 bit - put them in the lower 12 bits of the result */
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+  /* Say how many channels would be used by the sequencer */
+  ADC_InitStructure.ADC_NbrOfChannel = 1;
+
+  /* Now do the setup */
+  ADC_Init(ADC1, &ADC_InitStructure);
+  /* Enable ADC1 */
+  ADC_Cmd(ADC1, ENABLE);
+
+  /* Enable ADC1 reset calibaration register */
+  ADC_ResetCalibration(ADC1);
+  /* Check the end of ADC1 reset calibration register */
+  while(ADC_GetResetCalibrationStatus(ADC1));
+  /* Start ADC1 calibaration */
+  ADC_StartCalibration(ADC1);
+  /* Check the end of ADC1 calibration */
+  while(ADC_GetCalibrationStatus(ADC1));
+}
+
+uint16 readADC1(uint8 channel)
+{
+  ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_1Cycles5);
+  // Start the conversion
+  ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+  // Wait until conversion completion
+  while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+  // Get the conversion value
+  return ADC_GetConversionValue(ADC1);
+}

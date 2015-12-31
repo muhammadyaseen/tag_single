@@ -27,7 +27,7 @@ typedef 	long			S32;
 #define  	LED_GREEN		LED_PC6
 #define  	LED_RED			LED_PC7
 #define  	SCK				SI_SCK
-#define  	nIRQ       		SI_IRQ
+//#define  	nIRQ       		SI_IRQ
 #define  	SDN	        	SI_SDN
 #define  	SDO	        	SI_MISO
 
@@ -65,6 +65,9 @@ typedef 	long			S32;
 
 #define FREQ_CHANNEL					0
 
+#define step_500K_step1		0x88    // register setting for frequency 500KHz step
+#define step_500K_step0		0x89	// register setting for frequency 500KHz step
+
 typedef struct
 {
 	unsigned char reach_1s				: 1;
@@ -85,9 +88,9 @@ U8 mode;
 #define SET_SI_SCK()      	GPIO_SetBits(SI_GPIO, SI_SCK)
 #define GET_SI_SCK()      	GPIO_ReadInputDataBit(SI_GPIO, SI_SCK)
 
-#define CLR_SI_IRQ()      	GPIO_ResetBits(SI_GPIO, SI_IRQ)
-#define SET_SI_IRQ()      	GPIO_SetBits(SI_GPIO, SI_IRQ)
-#define GET_SI_IRQ()       	GPIO_ReadInputDataBit(SI_GPIO, SI_IRQ)
+//#define CLR_SI_IRQ()      	GPIO_ResetBits(SI_GPIO, SI_IRQ)
+//#define SET_SI_IRQ()      	GPIO_SetBits(SI_GPIO, SI_IRQ)
+//#define GET_SI_IRQ()       	GPIO_ReadInputDataBit(SI_GPIO, SI_IRQ)
 
 #define SI_NSEL_CLR()      	{ GPIO_ResetBits(SI_GPIO, SI_CS); Sleep(5); }
 #define SI_NSEL_SET()      	{ GPIO_SetBits(SI_GPIO, SI_CS); Sleep(5); }
@@ -117,9 +120,10 @@ void sdn_reset(void);
 void clr_interrupt(void);
 void fifo_reset(void);
 void enable_tx_interrupt(void);
-//void enable_rx_interrupt(void);
+void enable_rx_interrupt(void);
 void tx_start(void);
-
+void rx_start(void);
+void rx_init(void);
 void rf_standby(void);
 
 void toggle_to_rst_nSEL(void);
